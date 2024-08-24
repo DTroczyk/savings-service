@@ -21,5 +21,19 @@ namespace Savings_API.Controllers
             var savings = _service.GetAllSavings();
             return Ok(savings);
         }
+
+        [HttpGet("{year}")]
+        public IActionResult GetSavingsForYear(int year)
+        {
+            var savings = _service.GetSavingsForYear(year);
+            return Ok(savings);
+        }
+
+        [HttpGet("{year}/{month}")]
+        public IActionResult GetSavingsForMonth(int year, int month)
+        {
+            var savings = _service.GetSavingsForMonth(year, month);
+            return Ok(savings);
+        }
     }
 }
