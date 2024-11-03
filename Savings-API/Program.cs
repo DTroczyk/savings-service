@@ -2,10 +2,21 @@ using Microsoft.EntityFrameworkCore;
 using Savings_API.Context;
 using Savings_API.Services;
 
+var anyCors = "_AnyCors";
+
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 var connectionString = configuration.GetValue<string>("ConnectionStrings:Default");
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: anyCors,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200");
+                      });
+});
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(opt => { opt.UseSqlServer(connectionString); });
@@ -29,5 +40,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(anyCors);
 
 app.Run();

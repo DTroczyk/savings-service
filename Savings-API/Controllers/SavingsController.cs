@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Savings_API.DTOs;
 using Savings_API.Services;
 
 namespace Savings_API.Controllers
@@ -35,5 +36,9 @@ namespace Savings_API.Controllers
             var savings = _service.GetSavingsForMonth(year, month);
             return Ok(savings);
         }
+
+        [HttpPost("add-saving")]
+        public IActionResult AddSaving([FromBody] AddSavingDto payload) { 
+            return Ok(payload); }
     }
 }
