@@ -51,7 +51,7 @@ namespace Savings_API.Controllers
         }
 
         [HttpPost("add-saving")]
-        public async Task<IActionResult> AddSaving([FromBody] AddSavingDto payload)
+        public async Task<IActionResult> AddSaving([FromBody] AddOrEditSavingDto payload)
         {
             if (!ModelState.IsValid)
             {
@@ -59,6 +59,25 @@ namespace Savings_API.Controllers
             }
             Saving newSaving = await _service.AddSaving(payload);
             return CreatedAtAction(nameof(GetSaving), new { id = newSaving.Id }, newSaving);
+        }
+
+        [HttpPut("update-saving/{id}")]
+        public async Task<IActionResult> UpdateSaving([FromBody] AddOrEditSavingDto payload, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(payload);
+            }
+
+            try
+            {
+                var updatedSaving = await _service.UpdateSaving(id, payload);
+                return Ok(updatedSaving); // Zwraca 200 OK z zaktualizowanym obiektem
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message); // Zwraca 404 Not Found
+            }
         }
     }
 }

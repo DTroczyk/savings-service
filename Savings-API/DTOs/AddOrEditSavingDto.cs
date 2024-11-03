@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Savings_API.DTOs
 {
-    public class AddSavingDto
+    public class AddOrEditSavingDto
     {
         [Required(ErrorMessage = "Goal name is required.")]
         [MaxLength(100, ErrorMessage = "Max length of goal name is 100.")]
