@@ -7,7 +7,7 @@ var anyCors = "_AnyCors";
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-var connectionString = configuration.GetValue<string>("ConnectionStrings:Default");
+var connectionString = Environment.GetEnvironmentVariable("savingsTestConnString");
 
 builder.Services.AddCors(options =>
 {
@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(opt => { opt.UseSqlServer(connectionString); });
+builder.Services.AddDbContext<AppDbContext>(opt => { opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

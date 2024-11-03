@@ -14,8 +14,6 @@ namespace Savings_API.Context
 
         public virtual DbSet<Saving> Savings { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer("Name=ConnectionStrings:Default");
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Saving>(entity =>
