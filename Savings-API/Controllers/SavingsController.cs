@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Savings_API.Context;
 using Savings_API.DTOs;
 using Savings_API.Services;
@@ -72,11 +71,25 @@ namespace Savings_API.Controllers
             try
             {
                 var updatedSaving = await _service.UpdateSaving(id, payload);
-                return Ok(updatedSaving); // Zwraca 200 OK z zaktualizowanym obiektem
+                return Ok(updatedSaving);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message); // Zwraca 404 Not Found
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("delete-saving/{id}")]
+        public async Task<IActionResult> DeleteSaving( int id)
+        {
+            try
+            {
+                await _service.DeleteSaving(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
     }

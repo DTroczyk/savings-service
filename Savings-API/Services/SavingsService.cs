@@ -12,6 +12,7 @@ namespace Savings_API.Services
         public Saving? GetSaving(int savingId);
         public Task<Saving> AddSaving(AddOrEditSavingDto dto);
         public Task<Saving> UpdateSaving(int savingId, AddOrEditSavingDto dto);
+        public Task DeleteSaving(int savingId);
     }
 
     public class SavingsService : BaseService, ISavingsService
@@ -79,6 +80,18 @@ namespace Savings_API.Services
             await _dbContext.SaveChangesAsync();
 
             return editedSaving;
+        }
+
+        public async Task DeleteSaving(int savingId)
+        {
+            Saving? saving = GetSaving(savingId);
+            if (saving == null)
+            {
+                throw new KeyNotFoundException($"Saving with ID {savingId} not found");
+            }
+
+            _dbContext.Savings.Remove(saving);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
