@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Savings_API.Context;
 using Savings_API.Services;
 
-var anyCors = "_AnyCors";
+var anyCors = "_LocalCors";
 
 var builder = WebApplication.CreateBuilder(args);
 

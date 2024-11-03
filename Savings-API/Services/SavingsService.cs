@@ -9,6 +9,8 @@ namespace Savings_API.Services
         public IList<Saving> GetAllSavings();
         public IList<Saving> GetSavingsForYear(int year);
         public IList<Saving> GetSavingsForMonth(int year, int month);
+        public Saving GetSaving(int savingId);
+        public Task<Saving> AddSaving(AddSavingDto dto);
     }
 
     public class SavingsService : BaseService, ISavingsService
@@ -36,9 +38,28 @@ namespace Savings_API.Services
             return savings;
         }
 
-        //public Saving AddSaving(AddSavingDto dto)
-        //{
+        public async Task<Saving> AddSaving(AddSavingDto dto)
+        {
+            Saving newSaving = new Saving
+            {
+                InsertDate = DateTime.UtcNow,
+                Amount = dto.Amount,
+                Description = dto.Description,
+                Goal = dto.Goal,
+                Date = dto.Date
+            };
 
-        //}
+            await _dbContext.Savings.AddAsync(newSaving);
+            await _dbContext.SaveChangesAsync();
+
+            return newSaving;
+        }
+
+        public Saving GetSaving(int savingId)
+        {
+            Saving? saving = _dbContext.Savings.FirstOrDefault(s => s.Id == savingId);
+
+            return saving;
+        }
     }
 }
