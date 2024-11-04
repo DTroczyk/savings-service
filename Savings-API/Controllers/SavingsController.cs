@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Savings_API.Context;
+using Savings_API.DTOs;
 using Savings_API.Services;
 
 namespace Savings_API.Controllers
@@ -15,25 +16,81 @@ namespace Savings_API.Controllers
             _service = service;
         }
 
+        [HttpGet("get-saving/{id}")]
+        public IActionResult GetSaving(int id)
+        {
+            Saving saving = _service.GetSaving(id);
+
+            if (saving == null)
+            {
+                return NotFound();
+            }
+            return Ok(saving);
+        }
+
         [HttpGet("get-all")]
         public IActionResult GetAllSavings()
         {
-            var savings = _service.GetAllSavings();
+            IList<Saving> savings = _service.GetAllSavings();
             return Ok(savings);
         }
 
         [HttpGet("{year}")]
         public IActionResult GetSavingsForYear(int year)
         {
-            var savings = _service.GetSavingsForYear(year);
+            IList<Saving> savings = _service.GetSavingsForYear(year);
             return Ok(savings);
         }
 
         [HttpGet("{year}/{month}")]
         public IActionResult GetSavingsForMonth(int year, int month)
         {
-            var savings = _service.GetSavingsForMonth(year, month);
+            IList<Saving> savings = _service.GetSavingsForMonth(year, month);
             return Ok(savings);
+        }
+
+        [HttpPost("add-saving")]
+        public async Task<IActionResult> AddSaving([FromBody] AddOrEditSavingDto payload)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(payload);
+            }
+            Saving newSaving = await _service.AddSaving(payload);
+            return CreatedAtAction(nameof(GetSaving), new { id = newSaving.Id }, newSaving);
+        }
+
+        [HttpPut("update-saving/{id}")]
+        public async Task<IActionResult> UpdateSaving([FromBody] AddOrEditSavingDto payload, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(payload);
+            }
+
+            try
+            {
+                var updatedSaving = await _service.UpdateSaving(id, payload);
+                return Ok(updatedSaving);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("delete-saving/{id}")]
+        public async Task<IActionResult> DeleteSaving( int id)
+        {
+            try
+            {
+                await _service.DeleteSaving(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

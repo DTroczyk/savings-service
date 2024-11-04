@@ -1,23 +1,10 @@
-/****** Object:  Table [dbo].[Savings]    Script Date: 18.08.2024 13:48:08 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Savings](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[InsertDate] [datetime] NOT NULL,
-	[Destination] [varchar](100) NOT NULL,
-	[Name] [varchar](100) NOT NULL,
-	[Amount] [int] NOT NULL,
-	[Date] [date] NULL,
- CONSTRAINT [PK_savings.Savings] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[Savings] ADD  DEFAULT (getdate()) FOR [InsertDate]
-GO
+CREATE TABLE `Savings` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `insertDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `goal` varchar(100) NOT NULL,
+  `description` varchar(250) NOT NULL,
+  `amount` int NOT NULL,
+  `date` date DEFAULT NULL,
+  `userId` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
