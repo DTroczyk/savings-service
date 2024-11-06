@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Savings_API.Context;
 using Savings_API.DTOs;
 using Savings_API.Services;
@@ -17,6 +18,7 @@ namespace Savings_API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize] // For testing
         public IActionResult GetSaving(int id)
         {
             Saving saving = _service.GetSaving(id);
