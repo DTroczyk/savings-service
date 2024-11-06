@@ -16,7 +16,7 @@ namespace Savings_API.Controllers
             _service = service;
         }
 
-        [HttpGet("get-saving/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetSaving(int id)
         {
             Saving saving = _service.GetSaving(id);
@@ -28,28 +28,28 @@ namespace Savings_API.Controllers
             return Ok(saving);
         }
 
-        [HttpGet("get-all")]
-        public IActionResult GetAllSavings()
+        [HttpGet()]
+        public IActionResult GetSavings()
         {
             IList<Saving> savings = _service.GetAllSavings();
             return Ok(savings);
         }
 
-        [HttpGet("{year}")]
-        public IActionResult GetSavingsForYear(int year)
+        [HttpGet("period/{year}")]
+        public IActionResult GetSavings( int year)
         {
             IList<Saving> savings = _service.GetSavingsForYear(year);
             return Ok(savings);
         }
 
-        [HttpGet("{year}/{month}")]
-        public IActionResult GetSavingsForMonth(int year, int month)
+        [HttpGet("period/{year}/{month}")]
+        public IActionResult GetSavings( int year, int month)
         {
             IList<Saving> savings = _service.GetSavingsForMonth(year, month);
             return Ok(savings);
         }
 
-        [HttpPost("add-saving")]
+        [HttpPost()]
         public async Task<IActionResult> AddSaving([FromBody] AddOrEditSavingDto payload)
         {
             if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ namespace Savings_API.Controllers
             return CreatedAtAction(nameof(GetSaving), new { id = newSaving.Id }, newSaving);
         }
 
-        [HttpPut("update-saving/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSaving([FromBody] AddOrEditSavingDto payload, int id)
         {
             if (!ModelState.IsValid)
@@ -79,7 +79,7 @@ namespace Savings_API.Controllers
             }
         }
 
-        [HttpDelete("delete-saving/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSaving( int id)
         {
             try
