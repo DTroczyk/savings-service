@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Savings_API.DTOs;
+using Savings_API.VMs;
 
 namespace Savings_API.Controllers
 {
@@ -11,11 +14,13 @@ namespace Savings_API.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IMapper _mapper;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
@@ -65,6 +70,20 @@ namespace Savings_API.Controllers
             }
 
             return Ok("User registered successfully");
+        }
+
+        /// <summary>
+        /// Temporary endpoint until create JWT tokens.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("users")]
+        public async Task<IActionResult> Users()
+        {
+            var users = await _userManager.Users.ToListAsync();
+
+            List<UserVm> userVms = _mapper.Map<List<UserVm>>(users);
+
+            return Ok(userVms);
         }
     }
 }

@@ -65,6 +65,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ISavingsService, SavingsService>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -75,8 +77,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.MapGroup("/identity").MapIdentityApi<IdentityUser>();
 
 app.UseAuthorization();
 
