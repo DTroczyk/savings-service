@@ -35,5 +35,36 @@ namespace Savings_API.Controllers
 
             return Ok("Login successed. JWT token will be added in the future.");
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
+            var passwordValidationResult = await _userManager.PasswordValidators.First().ValidateAsync(_userManager, user, registerDto.Password);
+
+            if (!passwordValidationResult.Succeeded)
+            {
+                foreach (var error in passwordValidationResult.Errors)
+                {
+                    ModelState.AddModelError("Password", error.Description);
+                }
+                return BadRequest(ModelState);
+            }
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return BadRequest(ModelState);
+            }
+
+            return Ok("User registered successfully");
+        }
     }
 }
