@@ -56,7 +56,11 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<AuthDbContext>();
+builder.Services.AddIdentityApiEndpoints<IdentityUser>((options) =>
+{
+    options.User.RequireUniqueEmail = false;
+    options.SignIn.RequireConfirmedEmail = false;
+}).AddEntityFrameworkStores<AuthDbContext>();
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ISavingsService, SavingsService>();
