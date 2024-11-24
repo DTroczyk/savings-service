@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Savings_API.Context
 {
-    public partial class AppDbContext : Microsoft.EntityFrameworkCore.DbContext
+    public partial class AppDbContext : IdentityDbContext
     {
         public AppDbContext()
         {

@@ -23,7 +23,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(opt => { opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); });
-builder.Services.AddDbContext<AuthDbContext>(opt => { opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -60,7 +59,7 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>((options) =>
 {
     options.User.RequireUniqueEmail = false;
     options.SignIn.RequireConfirmedEmail = false;
-}).AddEntityFrameworkStores<AuthDbContext>();
+}).AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ISavingsService, SavingsService>();
