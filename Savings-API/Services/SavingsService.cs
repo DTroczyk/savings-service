@@ -42,19 +42,20 @@ namespace Savings_API.Services
 
         public async Task<Saving> AddSaving(AddOrEditSavingDto dto)
         {
-            Saving newSaving = new Saving
-            {
-                InsertDate = DateTime.UtcNow,
-                Amount = dto.Amount,
-                Description = dto.Description,
-                Goal = dto.Goal,
-                Date = dto.Date
-            };
+            throw new NotImplementedException();
+            //Saving newSaving = new Saving
+            //{
+            //    InsertDate = DateTime.UtcNow,
+            //    Amount = dto.Amount,
+            //    Description = dto.Description,
+            //    Goal = dto.Goal,
+            //    Date = dto.Date
+            //};
 
-            await _dbContext.Savings.AddAsync(newSaving);
-            await _dbContext.SaveChangesAsync();
+            //await _dbContext.Savings.AddAsync(newSaving);
+            //await _dbContext.SaveChangesAsync();
 
-            return newSaving;
+            //return newSaving;
         }
 
         public Saving? GetSaving(int savingId)
@@ -66,20 +67,22 @@ namespace Savings_API.Services
 
         public async Task<Saving> UpdateSaving(int savingId, AddOrEditSavingDto dto)
         {
-            Saving? editedSaving = GetSaving(savingId);
-            if (editedSaving == null) 
-            {
-                throw new KeyNotFoundException($"Saving with ID {savingId} not found");
-            }
+            throw new NotImplementedException();
 
-            editedSaving.Goal = dto.Goal;
-            editedSaving.Description = dto.Description;
-            editedSaving.Amount = dto.Amount;
-            editedSaving.Date = dto.Date;
+            //Saving? editedSaving = GetSaving(savingId);
+            //if (editedSaving == null) 
+            //{
+            //    throw new KeyNotFoundException($"Saving with ID {savingId} not found");
+            //}
 
-            await _dbContext.SaveChangesAsync();
+            //editedSaving.Goal = dto.Goal;
+            //editedSaving.Description = dto.Description;
+            //editedSaving.Amount = dto.Amount;
+            //editedSaving.Date = dto.Date;
 
-            return editedSaving;
+            //await _dbContext.SaveChangesAsync();
+
+            //return editedSaving;
         }
 
         public async Task DeleteSaving(int savingId)

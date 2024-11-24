@@ -55,11 +55,13 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>((options) =>
-{
-    options.User.RequireUniqueEmail = false;
-    options.SignIn.RequireConfirmedEmail = false;
-}).AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>((options) =>
+    {
+        options.User.RequireUniqueEmail = false;
+        options.SignIn.RequireConfirmedEmail = false;
+    }).AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ISavingsService, SavingsService>();
