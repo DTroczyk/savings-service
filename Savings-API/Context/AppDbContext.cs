@@ -21,13 +21,19 @@ namespace Savings_API.Context
                 .HasOne(s => s.Goal)
                 .WithMany(g => g.Savings)
                 .HasForeignKey(s => s.GoalId)
-                .OnDelete(DeleteBehavior.SetNull); 
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<Saving>()
                 .HasOne(s => s.User)
-                .WithMany()
+                .WithMany(u => u.Savings)
                 .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Goal>()
+                .HasOne(g => g.Owner)
+                .WithMany(u => u.Goals)
+                .HasForeignKey(g => g.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

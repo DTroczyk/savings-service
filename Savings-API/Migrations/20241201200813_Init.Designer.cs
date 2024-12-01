@@ -12,8 +12,8 @@ using Savings_API.Context;
 namespace Savings_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241124174931_InitMigrationWithIdentity")]
-    partial class InitMigrationWithIdentity
+    [Migration("20241201200813_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,7 +239,15 @@ namespace Savings_API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Goals");
                 });
@@ -254,9 +262,6 @@ namespace Savings_API.Migrations
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("ApplicationUserId")
-                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("Date")
                         .HasColumnType("datetime(6)");
@@ -275,8 +280,6 @@ namespace Savings_API.Migrations
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("GoalId");
 
@@ -336,21 +339,28 @@ namespace Savings_API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Savings_API.Context.Goal", b =>
+                {
+                    b.HasOne("Savings_API.Context.ApplicationUser", "Owner")
+                        .WithMany("Goals")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("Savings_API.Context.Saving", b =>
                 {
-                    b.HasOne("Savings_API.Context.ApplicationUser", null)
-                        .WithMany("Savings")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("Savings_API.Context.Goal", "Goal")
                         .WithMany("Savings")
                         .HasForeignKey("GoalId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Savings_API.Context.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Savings")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Goal");
 
@@ -359,6 +369,8 @@ namespace Savings_API.Migrations
 
             modelBuilder.Entity("Savings_API.Context.ApplicationUser", b =>
                 {
+                    b.Navigation("Goals");
+
                     b.Navigation("Savings");
                 });
 

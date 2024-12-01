@@ -1,4 +1,6 @@
-﻿namespace Savings_API.Context
+﻿using Savings_API.Enums;
+
+namespace Savings_API.Context
 {
     public class Goal
     {
@@ -6,8 +8,10 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }
+        public Guid OwnerId { get; set; }
+        public EntityStatusEnum Status { get; set; }
 
-        // Nawigacja do Savings (relacja jeden-do-wielu)
         public virtual ICollection<Saving> Savings { get; set; }
+        public virtual ApplicationUser Owner { get; set; }
     }
 }
