@@ -65,6 +65,7 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>((options) =>
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<ISavingsService, SavingsService>();
+builder.Services.AddScoped<IGoalsService, GoalsService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
