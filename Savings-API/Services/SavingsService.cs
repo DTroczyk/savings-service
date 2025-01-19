@@ -28,14 +28,14 @@ namespace Savings_API.Services
 
         public IList<Saving> GetSavingsForYear(int year)
         {
-            List<Saving> savings = _dbContext.Savings.Where(s => s.Date.Value.Year == year).AsNoTracking().ToList();
+            List<Saving> savings = _dbContext.Savings.Where(s => s.Date.Year == year).AsNoTracking().ToList();
 
             return savings;
         }
 
         public IList<Saving> GetSavingsForMonth(int year, int month)
         {
-            List<Saving> savings = _dbContext.Savings.Where(s => s.Date.Value.Month == month && s.Date.Value.Year == year).AsNoTracking().ToList();
+            List<Saving> savings = _dbContext.Savings.Where(s => s.Date.Month == month && s.Date.Year == year).AsNoTracking().ToList();
 
             return savings;
         }
