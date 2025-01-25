@@ -55,7 +55,7 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>((options) =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>((options) =>
     {
         options.User.RequireUniqueEmail = false;
         options.SignIn.RequireConfirmedEmail = false;
@@ -80,6 +80,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

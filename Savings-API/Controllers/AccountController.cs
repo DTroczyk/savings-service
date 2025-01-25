@@ -2,20 +2,21 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Savings_API.Context;
 using Savings_API.DTOs;
 using Savings_API.VMs;
 
 namespace Savings_API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/account")]
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IMapper _mapper;
 
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IMapper mapper)
+    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -46,7 +47,7 @@ public class AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = new IdentityUser { UserName = registerDto.UserName, Email = registerDto.Email };
+        var user = new ApplicationUser { UserName = registerDto.UserName, Email = registerDto.Email };
         var passwordValidationResult = await _userManager.PasswordValidators.First().ValidateAsync(_userManager, user, registerDto.Password);
 
         if (!passwordValidationResult.Succeeded)
