@@ -20,7 +20,7 @@ public class GoalsController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetGoal(int id)
     {
-        Goal goal = _service.GetGoal(id);
+        Goal? goal = _service.GetGoal(id);
 
         if (goal == null)
         {
@@ -36,5 +36,47 @@ public class GoalsController : ControllerBase
         return Ok(goals);
     }
 
-    
+    [HttpPost]
+    public async Task<IActionResult> AddGoal([FromBody] AddOrEditGoalDto payload)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(payload);
+        }
+        Goal newGoal = await _service.AddGoal(payload);
+        return CreatedAtAction(nameof(GetGoal), new { id = newGoal.Id }, newGoal);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateGoal([FromBody] AddOrEditGoalDto payload, int id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(payload);
+        }
+
+        try
+        {
+            var updatedGoal = await _service.UpdateGoal(id, payload);
+            return Ok(updatedGoal);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteGoal(int id)
+    {
+        try
+        {
+            await _service.DeleteGoal(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
 }

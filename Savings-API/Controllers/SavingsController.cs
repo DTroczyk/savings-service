@@ -21,7 +21,7 @@ public class SavingsController : ControllerBase
     [Authorize] // For testing
     public IActionResult GetSaving(int id)
     {
-        Saving saving = _service.GetSaving(id);
+        Saving? saving = _service.GetSaving(id);
 
         if (saving == null)
         {
