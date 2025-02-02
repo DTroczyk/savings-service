@@ -17,7 +17,11 @@ namespace Savings_API.Services
 
     public class SavingsService : BaseService, ISavingsService
     {
-        public SavingsService(AppDbContext context) : base(context) { }
+        private GoalsService _goalsService;
+        public SavingsService(AppDbContext context, GoalsService goalsService) : base(context) 
+        { 
+            _goalsService = goalsService;
+        }
 
         public IList<Saving> GetAllSavings()
         {
@@ -42,20 +46,22 @@ namespace Savings_API.Services
 
         public async Task<Saving> AddSaving(AddOrEditSavingDto dto)
         {
-            throw new NotImplementedException();
-            //Saving newSaving = new Saving
-            //{
-            //    InsertDate = DateTime.UtcNow,
-            //    Amount = dto.Amount,
-            //    Description = dto.Description,
-            //    Goal = dto.Goal,
-            //    Date = dto.Date
-            //};
+            Goal? selectedGoal = _goalsService.GetGoal(dto.GoalId) ?? throw new Exception("Selected goal not exist.");
 
-            //await _dbContext.Savings.AddAsync(newSaving);
-            //await _dbContext.SaveChangesAsync();
+            Saving newSaving = new Saving
+            {
+                InsertDate = DateTime.UtcNow,
+                Amount = dto.Amount,
+                Description = dto.Description,
+                GoalId = dto.GoalId,
+                Date = dto.Date,
+                //UserId = ...
+            };
 
-            //return newSaving;
+            await _dbContext.Savings.AddAsync(newSaving);
+            await _dbContext.SaveChangesAsync();
+
+            return newSaving;
         }
 
         public Saving? GetSaving(int savingId)
@@ -67,22 +73,22 @@ namespace Savings_API.Services
 
         public async Task<Saving> UpdateSaving(int savingId, AddOrEditSavingDto dto)
         {
-            throw new NotImplementedException();
+            Goal? selectedGoal = _goalsService.GetGoal(dto.GoalId) ?? throw new Exception("Selected goal not exist.");
 
-            //Saving? editedSaving = GetSaving(savingId);
-            //if (editedSaving == null) 
-            //{
-            //    throw new KeyNotFoundException($"Saving with ID {savingId} not found");
-            //}
+            Saving? editedSaving = GetSaving(savingId);
+            if (editedSaving == null)
+            {
+                throw new KeyNotFoundException($"Saving with ID {savingId} not found");
+            }
 
-            //editedSaving.Goal = dto.Goal;
-            //editedSaving.Description = dto.Description;
-            //editedSaving.Amount = dto.Amount;
-            //editedSaving.Date = dto.Date;
+            editedSaving.GoalId = dto.GoalId;
+            editedSaving.Description = dto.Description;
+            editedSaving.Amount = dto.Amount;
+            editedSaving.Date = dto.Date;
 
-            //await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
-            //return editedSaving;
+            return editedSaving;
         }
 
         public async Task DeleteSaving(int savingId)

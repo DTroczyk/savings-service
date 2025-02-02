@@ -11,11 +11,11 @@ public class Saving
     public required string Description { get; set; }
     [Min(1)]
     public required int Amount { get; set; }
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; }
     public Guid? UserId { get; set; }
     public required int GoalId { get; set; }
 
-    public required virtual ApplicationUser User { get; set; }
+    public virtual ApplicationUser User { get; set; }
 
-    public required virtual Goal Goal { get; set; }
+    public virtual Goal Goal { get; set; }
 }
