@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Savings_API.Context;
 using Savings_API.DTOs;
 using Savings_API.Services;
+using Savings_API.VMs;
 
 namespace Savings_API.Controllers;
 
@@ -32,21 +33,21 @@ public class SavingsController : ControllerBase
     [HttpGet]
     public IActionResult GetSavings()
     {
-        IList<Saving> savings = _service.GetAllSavings();
+        IList<SavingVm> savings = _service.GetAllSavings();
         return Ok(savings);
     }
 
     [HttpGet("period/{year}")]
     public IActionResult GetSavings(int year)
     {
-        IList<Saving> savings = _service.GetSavingsForYear(year);
+        IList<SavingVm> savings = _service.GetSavingsForYear(year);
         return Ok(savings);
     }
 
     [HttpGet("period/{year}/{month}")]
     public IActionResult GetSavings(int year, int month)
     {
-        IList<Saving> savings = _service.GetSavingsForMonth(year, month);
+        IList<SavingVm> savings = _service.GetSavingsForMonth(year, month);
         return Ok(savings);
     }
 

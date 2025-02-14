@@ -16,5 +16,6 @@ namespace Savings_API.DTOs
         public required int Amount { get; set; }
         [JsonConverter(typeof(DateOnlyJsonConverter))]
         public DateOnly Date { get; set; }
+        public int? UserId { get; set; }
     }
 }

@@ -38,9 +38,8 @@ namespace Savings_API.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 Status = Enums.EntityStatusEnum.Active,
-                //OwnerId = ,
             };
 
             await _dbContext.Goals.AddAsync(newGoal);
@@ -64,8 +63,8 @@ namespace Savings_API.Services
         public async Task DeleteGoal(int goalId)
         {
             Goal? goal = GetGoal(goalId) ?? throw new KeyNotFoundException($"Goal with ID {goalId} not found");
-            
-            _dbContext.Goals.Remove(goal);
+
+            goal.Status = Enums.EntityStatusEnum.Unactive;
             await _dbContext.SaveChangesAsync();
         }
     }

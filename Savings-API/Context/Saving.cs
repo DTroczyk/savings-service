@@ -16,6 +16,5 @@ public class Saving
     public required int GoalId { get; set; }
 
     public virtual ApplicationUser User { get; set; }
-
     public virtual Goal Goal { get; set; }
 }

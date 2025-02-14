@@ -1,4 +1,5 @@
-﻿using Savings_API.Context;
+﻿using AutoMapper;
+using Savings_API.Context;
 using System;
 
 namespace Savings_API.Services

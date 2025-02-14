@@ -3,6 +3,8 @@ using Microsoft.OpenApi.Models;
 using Savings_API.Context;
 using Savings_API.Services;
 
+const string version = "0.0.1-alpha.0";
+
 var localCors = "_LocalCors";
 
 var builder = WebApplication.CreateBuilder(args);
