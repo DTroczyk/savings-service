@@ -12,7 +12,7 @@ public class Saving
     [Min(1)]
     public required int Amount { get; set; }
     public DateOnly Date { get; set; }
-    public Guid? UserId { get; set; }
+    public int? UserId { get; set; }
     public required int GoalId { get; set; }
 
     public virtual ApplicationUser User { get; set; }

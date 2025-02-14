@@ -18,7 +18,6 @@ public class SavingsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize] // For testing
     public IActionResult GetSaving(int id)
     {
         Saving? saving = _service.GetSaving(id);

@@ -12,77 +12,19 @@ namespace Savings_API.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IMapper _mapper;
 
-    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+    public AccountController(IMapper mapper)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
         _mapper = mapper;
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+    //[HttpGet("users")]
+    //public async Task<IActionResult> Users()
+    //{
 
-        var user = await _userManager.FindByNameAsync(loginDto.UserName);
-        if (user == null)
-            return Unauthorized();
+    //    List<UserVm> userVms = _mapper.Map<List<UserVm>>(users);
 
-        var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, false, lockoutOnFailure: false);
-
-        if (!result.Succeeded)
-            return Unauthorized("Invalid username or password.");
-
-        return Ok("Login successed. JWT token will be added in the future.");
-    }
-
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var user = new ApplicationUser { UserName = registerDto.UserName, Email = registerDto.Email };
-        var passwordValidationResult = await _userManager.PasswordValidators.First().ValidateAsync(_userManager, user, registerDto.Password);
-
-        if (!passwordValidationResult.Succeeded)
-        {
-            foreach (var error in passwordValidationResult.Errors)
-            {
-                ModelState.AddModelError("Password", error.Description);
-            }
-            return BadRequest(ModelState);
-        }
-
-        var result = await _userManager.CreateAsync(user, registerDto.Password);
-        if (!result.Succeeded)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-            return BadRequest(ModelState);
-        }
-
-        return Ok("User registered successfully");
-    }
-
-    /// <summary>
-    /// Temporary endpoint until create JWT tokens.
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet("users")]
-    public async Task<IActionResult> Users()
-    {
-        var users = await _userManager.Users.ToListAsync();
-
-        List<UserVm> userVms = _mapper.Map<List<UserVm>>(users);
-
-        return Ok(userVms);
-    }
+    //    return Ok(userVms);
+    //}
 }

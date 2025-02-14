@@ -17,8 +17,8 @@ namespace Savings_API.Services
 
     public class SavingsService : BaseService, ISavingsService
     {
-        private GoalsService _goalsService;
-        public SavingsService(AppDbContext context, GoalsService goalsService) : base(context) 
+        private readonly IGoalsService _goalsService;
+        public SavingsService(AppDbContext context, IGoalsService goalsService) : base(context) 
         { 
             _goalsService = goalsService;
         }
