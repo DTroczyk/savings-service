@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Savings_API.Context;
 using Savings_API.DTOs;
 using Savings_API.Services;
+using Savings_API.VMs;
 
 namespace Savings_API.Controllers;
 
@@ -32,7 +33,7 @@ public class GoalsController : ControllerBase
     [HttpGet]
     public IActionResult GetGoals()
     {
-        IList<Goal> goals = _service.GetAllGoals();
+        IList<GoalVm> goals = _service.GetAllGoals();
         return Ok(goals);
     }
 

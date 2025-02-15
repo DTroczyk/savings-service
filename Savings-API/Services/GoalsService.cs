@@ -1,13 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Savings_API.Context;
 using Savings_API.DTOs;
+using Savings_API.VMs;
 
 namespace Savings_API.Services
 {
     public interface IGoalsService 
     {
-        public IList<Goal> GetAllGoals();
+        public IList<GoalVm> GetAllGoals();
         public Goal? GetGoal(int goalId);
+        public GoalVm? GetGoalVm(int goalId);
         public Task<Goal> AddGoal(AddOrEditGoalDto dto);
         public Task<Goal> UpdateGoal(int goalId, AddOrEditGoalDto dto);
         public Task DeleteGoal(int goalId);
@@ -16,13 +19,19 @@ namespace Savings_API.Services
 
     public class GoalsService : BaseService, IGoalsService
     {
-        public GoalsService(AppDbContext context) : base(context) { }
+        private IMapper _mapper;
 
-        public IList<Goal> GetAllGoals()
+        public GoalsService(AppDbContext context, IMapper mapper) : base(context) {
+            _mapper = mapper;
+        }
+
+        public IList<GoalVm> GetAllGoals()
         {
             List<Goal> goals = _dbContext.Goals.AsNoTracking().ToList();
 
-            return goals;
+            List<GoalVm> goalVms = _mapper.Map<List<GoalVm>>(goals);
+
+            return goalVms;
         }
 
         public Goal? GetGoal(int goalId)
@@ -30,6 +39,15 @@ namespace Savings_API.Services
             Goal? goal = _dbContext.Goals.Find(goalId);
 
             return goal;
+        }
+
+        public GoalVm? GetGoalVm(int goalId)
+        {
+            Goal? goal = _dbContext.Goals.Find(goalId);
+
+            GoalVm goalVm = _mapper.Map<GoalVm>(goal);
+
+            return goalVm;
         }
 
         public async Task<Goal> AddGoal(AddOrEditGoalDto dto)
