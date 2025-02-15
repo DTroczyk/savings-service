@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Savings_API.Context;
@@ -9,6 +8,7 @@ var localCors = "_LocalCors";
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+var version = builder.Configuration["Version"] ?? "Unknown";
 var connectionString = Environment.GetEnvironmentVariable("savingsConnString");
 
 builder.Services.AddCors(options =>
@@ -26,44 +26,19 @@ builder.Services.AddDbContext<AppDbContext>(opt => { opt.UseMySql(connectionStri
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(opt =>
+builder.Services.AddSwaggerGen(options =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
-    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
-        In = ParameterLocation.Header,
-        Description = "Please enter token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "bearer"
-    });
-
-    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
+        Title = "Savings API",
+        Version = version,
+        Description = $"App version: {version}"
     });
 });
 
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>((options) =>
-    {
-        options.User.RequireUniqueEmail = false;
-        options.SignIn.RequireConfirmedEmail = false;
-    }).AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
-
 builder.Services.AddAuthorization();
 
+builder.Services.AddScoped<IGoalsService, GoalsService>();
 builder.Services.AddScoped<ISavingsService, SavingsService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -79,6 +54,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
