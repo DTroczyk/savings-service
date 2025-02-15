@@ -3,13 +3,12 @@ using Microsoft.OpenApi.Models;
 using Savings_API.Context;
 using Savings_API.Services;
 
-const string version = "0.0.1-alpha.0";
-
 var localCors = "_LocalCors";
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+var version = builder.Configuration["Version"] ?? "Unknown";
 var connectionString = Environment.GetEnvironmentVariable("savingsConnString");
 
 builder.Services.AddCors(options =>
@@ -27,7 +26,15 @@ builder.Services.AddDbContext<AppDbContext>(opt => { opt.UseMySql(connectionStri
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Savings API",
+        Version = version,
+        Description = $"App version: {version}"
+    });
+});
 
 builder.Services.AddAuthorization();
 
