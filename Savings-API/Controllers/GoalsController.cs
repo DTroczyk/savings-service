@@ -67,17 +67,49 @@ public class GoalsController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteGoal(int id)
+    [HttpPatch("active/{id}")]
+    public async Task<IActionResult> ActiveGoal(int id)
     {
         try
         {
-            await _service.DeleteGoal(id);
+            await _service.ActiveGoal(id);
             return NoContent();
         }
         catch (KeyNotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+    }
+
+    [HttpPatch("unactive/{id}")]
+    public async Task<IActionResult> UnactiveGoal(int id)
+    {
+        try
+        {
+            await _service.UnactiveGoal(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpPatch("archive/{id}")]
+    public async Task<IActionResult> ArchiveGoal(int id)
+    {
+        try
+        {
+            await _service.ArchiveGoal(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (BadHttpRequestException ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
