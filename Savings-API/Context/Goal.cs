@@ -11,7 +11,7 @@ namespace Savings_API.Context
         [MaxLength(250)]
         public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
-        public EntityStatusEnum Status { get; set; }
+        public EntityStatus Status { get; set; }
 
         public virtual ICollection<Saving> Savings { get; set; }
     }

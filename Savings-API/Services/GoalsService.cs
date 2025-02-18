@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Savings_API.Context;
 using Savings_API.DTOs;
+using Savings_API.Enums;
 using Savings_API.VMs;
 
 namespace Savings_API.Services
@@ -13,10 +14,7 @@ namespace Savings_API.Services
         public GoalVm? GetGoalVm(int goalId);
         public Task<Goal> AddGoal(AddOrEditGoalDto dto);
         public Task<Goal> UpdateGoal(int goalId, AddOrEditGoalDto dto);
-        public Task UnactiveGoal(int goalId);
-        public Task ArchiveGoal(int goalId);
-        public Task ActiveGoal(int goalId);
-
+        public Task UpdateStatus(int goalId, EntityStatus newStatus);
     }
 
     public class GoalsService : BaseService, IGoalsService
@@ -59,7 +57,7 @@ namespace Savings_API.Services
                 Name = dto.Name,
                 Description = dto.Description,
                 CreatedDate = DateTime.UtcNow,
-                Status = Enums.EntityStatusEnum.Active,
+                Status = Enums.EntityStatus.Active,
             };
 
             await _dbContext.Goals.AddAsync(newGoal);
@@ -80,33 +78,15 @@ namespace Savings_API.Services
             return editedGoal;
         }
 
-        public async Task UnactiveGoal(int goalId)
+        public async Task UpdateStatus(int goalId, EntityStatus newStatus)
         {
             Goal? goal = GetGoal(goalId) ?? throw new KeyNotFoundException($"Goal with ID {goalId} not found");
 
-            goal.Status = Enums.EntityStatusEnum.Unactive;
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task ArchiveGoal(int goalId)
-        {
-            Goal? goal = GetGoal(goalId) ?? throw new KeyNotFoundException($"Goal with ID {goalId} not found");
-
-            if (goal.Status == Enums.EntityStatusEnum.Unactive)
-            {
-                goal.Status = Enums.EntityStatusEnum.Archive;
-                await _dbContext.SaveChangesAsync();
-            } else
+            if (goal.Status == EntityStatus.Active && newStatus == EntityStatus.Archive)
             {
                 throw new BadHttpRequestException("Goal must be unactive first to be archive.");
-            }
-        }
-
-        public async Task ActiveGoal(int goalId)
-        {
-            Goal? goal = GetGoal(goalId) ?? throw new KeyNotFoundException($"Goal with ID {goalId} not found");
-
-            goal.Status = Enums.EntityStatusEnum.Active;
+            } 
+            goal.Status = newStatus;
             await _dbContext.SaveChangesAsync();
         }
     }

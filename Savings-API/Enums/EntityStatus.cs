@@ -1,6 +1,6 @@
 ﻿namespace Savings_API.Enums
 {
-    public enum EntityStatusEnum
+    public enum EntityStatus
     {
         Active,
         Unactive,
