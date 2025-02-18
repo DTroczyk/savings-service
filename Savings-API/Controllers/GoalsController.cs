@@ -67,17 +67,21 @@ public class GoalsController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteGoal(int id)
+    [HttpPatch("{id}/status")]
+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
     {
         try
         {
-            await _service.DeleteGoal(id);
+            await _service.UpdateStatus(id, dto.Status);
             return NoContent();
         }
         catch (KeyNotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (BadHttpRequestException ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
