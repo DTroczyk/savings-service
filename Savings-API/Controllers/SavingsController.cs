@@ -21,7 +21,7 @@ public class SavingsController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetSaving(int id)
     {
-        Saving? saving = _service.GetSaving(id);
+        SavingVm? saving = _service.GetSavingVm(id);
 
         if (saving == null)
         {
@@ -58,7 +58,7 @@ public class SavingsController : ControllerBase
         {
             return BadRequest(payload);
         }
-        Saving newSaving = await _service.AddSaving(payload);
+        SavingVm newSaving = await _service.AddSaving(payload);
         return CreatedAtAction(nameof(GetSaving), new { id = newSaving.Id }, newSaving);
     }
 

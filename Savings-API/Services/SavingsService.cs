@@ -14,8 +14,8 @@ namespace Savings_API.Services
         public IList<SavingVm> GetSavingsForMonth(int year, int month);
         public SavingVm? GetSavingVm(int savingId);
         public Saving? GetSaving(int savingId);
-        public Task<Saving> AddSaving(AddOrEditSavingDto dto);
-        public Task<Saving> UpdateSaving(int savingId, AddOrEditSavingDto dto);
+        public Task<SavingVm> AddSaving(AddOrEditSavingDto dto);
+        public Task<SavingVm> UpdateSaving(int savingId, AddOrEditSavingDto dto);
         public Task DeleteSaving(int savingId);
     }
 
@@ -57,9 +57,10 @@ namespace Savings_API.Services
             return savingsVms;
         }
 
-        public async Task<Saving> AddSaving(AddOrEditSavingDto dto)
+        public async Task<SavingVm> AddSaving(AddOrEditSavingDto dto)
         {
             Goal? selectedGoal = _goalsService.GetGoal(dto.GoalId) ?? throw new Exception("Selected goal not exist.");
+            //ApplicationUser? selectedUser = _goalsService.GetGoal(dto.GoalId) ?? throw new Exception("Selected goal not exist.");
 
             Saving newSaving = new Saving
             {
@@ -74,12 +75,14 @@ namespace Savings_API.Services
             await _dbContext.Savings.AddAsync(newSaving);
             await _dbContext.SaveChangesAsync();
 
-            return newSaving;
+            SavingVm newSavingVm = _mapper.Map<SavingVm>(newSaving);
+
+            return newSavingVm;
         }
 
         public SavingVm? GetSavingVm(int savingId)
         {
-            Saving? saving = _dbContext.Savings.Find(savingId);
+            Saving? saving = _dbContext.Savings.Include(s => s.User).Include(s => s.Goal).AsNoTracking().FirstOrDefault(s => s.Id == savingId);
 
             SavingVm savingVm = _mapper.Map<SavingVm>(saving);
 
@@ -93,7 +96,7 @@ namespace Savings_API.Services
             return saving;
         }
 
-        public async Task<Saving> UpdateSaving(int savingId, AddOrEditSavingDto dto)
+        public async Task<SavingVm> UpdateSaving(int savingId, AddOrEditSavingDto dto)
         {
             Goal? selectedGoal = _goalsService.GetGoal(dto.GoalId) ?? throw new Exception("Selected goal not exist.");
 
@@ -107,10 +110,12 @@ namespace Savings_API.Services
             editedSaving.Description = dto.Description;
             editedSaving.Amount = dto.Amount;
             editedSaving.Date = dto.Date;
+            editedSaving.UserId = dto.UserId;
 
             await _dbContext.SaveChangesAsync();
+            SavingVm editedSavingVm = _mapper.Map<SavingVm>(editedSaving);
 
-            return editedSaving;
+            return editedSavingVm;
         }
 
         public async Task DeleteSaving(int savingId)
