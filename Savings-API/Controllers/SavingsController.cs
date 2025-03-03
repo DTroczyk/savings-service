@@ -21,7 +21,7 @@ public class SavingsController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetSaving(int id)
     {
-        Saving? saving = _service.GetSaving(id);
+        SavingVm? saving = _service.GetSavingVm(id);
 
         if (saving == null)
         {
@@ -31,23 +31,9 @@ public class SavingsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetSavings()
+    public IActionResult GetSavings([FromQuery] SavingsFilterDto filter)
     {
-        IList<SavingVm> savings = _service.GetAllSavings();
-        return Ok(savings);
-    }
-
-    [HttpGet("period/{year}")]
-    public IActionResult GetSavings(int year)
-    {
-        IList<SavingVm> savings = _service.GetSavingsForYear(year);
-        return Ok(savings);
-    }
-
-    [HttpGet("period/{year}/{month}")]
-    public IActionResult GetSavings(int year, int month)
-    {
-        IList<SavingVm> savings = _service.GetSavingsForMonth(year, month);
+        IList<SavingVm> savings = _service.GetSavings(filter);
         return Ok(savings);
     }
 
@@ -58,7 +44,7 @@ public class SavingsController : ControllerBase
         {
             return BadRequest(payload);
         }
-        Saving newSaving = await _service.AddSaving(payload);
+        SavingVm newSaving = await _service.AddSaving(payload);
         return CreatedAtAction(nameof(GetSaving), new { id = newSaving.Id }, newSaving);
     }
 

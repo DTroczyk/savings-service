@@ -14,7 +14,7 @@ namespace Savings_API.VMs
         public int? UserId { get; set; }
         public required int GoalId { get; set; }
 
-        public string UserName { get; set; }
-        public string GoalName { get; set; }
+        public string? UserName { get; set; }
+        public required string GoalName { get; set; }
     }
 }
