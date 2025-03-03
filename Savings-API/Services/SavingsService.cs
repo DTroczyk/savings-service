@@ -9,9 +9,7 @@ namespace Savings_API.Services
 {
     public interface ISavingsService 
     {
-        public IList<SavingVm> GetAllSavings();
-        public IList<SavingVm> GetSavingsForYear(int year);
-        public IList<SavingVm> GetSavingsForMonth(int year, int month);
+        public IList<SavingVm> GetSavings(SavingsFilterDto filter);
         public SavingVm? GetSavingVm(int savingId);
         public Saving? GetSaving(int savingId);
         public Task<SavingVm> AddSaving(AddOrEditSavingDto dto);
@@ -30,27 +28,26 @@ namespace Savings_API.Services
             _mapper = mapper;
         }
 
-        public IList<SavingVm> GetAllSavings()
+        public IList<SavingVm> GetSavings(SavingsFilterDto filter)
         {
-            List<Saving> savings = _dbContext.Savings.Include(s => s.User).Include(s => s.Goal).AsNoTracking().ToList();
+            var query = _dbContext.Savings.AsQueryable();
 
-            IList<SavingVm> savingsVms = _mapper.Map<List<SavingVm>>(savings);
+            if (filter.DateFrom.HasValue)
+                query = query.Where(s => s.Date >= filter.DateFrom.Value);
 
-            return savingsVms;
-        }
+            if (filter.DateTo.HasValue)
+                query = query.Where(s => s.Date <= filter.DateTo.Value);
 
-        public IList<SavingVm> GetSavingsForYear(int year)
-        {
-            List<Saving> savings = _dbContext.Savings.Where(s => s.Date.Year == year).Include(s => s.User).Include(s => s.Goal).AsNoTracking().ToList();
+            if (filter.UserId.HasValue)
+                query = query.Where(s => s.UserId == filter.UserId.Value);
 
-            IList<SavingVm> savingsVms = _mapper.Map<List<SavingVm>>(savings);
+            if (filter.GoalId.HasValue)
+                query = query.Where(s => s.GoalId == filter.GoalId.Value);
 
-            return savingsVms;
-        }
+            if (!string.IsNullOrEmpty(filter.Description))
+                query = query.Where(s => s.Description.Contains(filter.Description));
 
-        public IList<SavingVm> GetSavingsForMonth(int year, int month)
-        {
-            List<Saving> savings = _dbContext.Savings.Where(s => s.Date.Month == month && s.Date.Year == year).Include(s => s.User).Include(s => s.Goal).AsNoTracking().ToList();
+            List<Saving> savings = [.. query.Include(s => s.User).Include(s => s.Goal).AsNoTracking()];
 
             IList<SavingVm> savingsVms = _mapper.Map<List<SavingVm>>(savings);
 
