@@ -16,7 +16,7 @@ namespace Savings_API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IList<UserVm>), StatusCodes.Status200OK)]
+        [ProducesResponseType<List<UserVm>>(StatusCodes.Status200OK)]
         public IActionResult GetUsers()
         {
             return Ok(_userService.GetUsers());

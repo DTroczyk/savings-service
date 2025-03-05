@@ -19,6 +19,8 @@ public class GoalsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType<GoalVm>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetGoal(int id)
     {
         Goal? goal = _service.GetGoal(id);
@@ -31,6 +33,7 @@ public class GoalsController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType<List<GoalVm>>(StatusCodes.Status200OK)]
     public IActionResult GetGoals()
     {
         IList<GoalVm> goals = _service.GetAllGoals();
@@ -38,6 +41,8 @@ public class GoalsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddGoal([FromBody] AddOrEditGoalDto payload)
     {
         if (!ModelState.IsValid)
@@ -49,6 +54,9 @@ public class GoalsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType<GoalVm>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateGoal([FromBody] AddOrEditGoalDto payload, int id)
     {
         if (!ModelState.IsValid)
@@ -68,6 +76,9 @@ public class GoalsController : ControllerBase
     }
 
     [HttpPatch("{id}/status")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
     {
         try

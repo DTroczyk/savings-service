@@ -19,6 +19,8 @@ public class SavingsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType<SavingVm>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetSaving(int id)
     {
         SavingVm? saving = _service.GetSavingVm(id);
@@ -31,6 +33,7 @@ public class SavingsController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType<List<SavingVm>>(StatusCodes.Status200OK)]
     public IActionResult GetSavings([FromQuery] SavingsFilterDto filter)
     {
         IList<SavingVm> savings = _service.GetSavings(filter);
@@ -38,6 +41,8 @@ public class SavingsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddSaving([FromBody] AddOrEditSavingDto payload)
     {
         if (!ModelState.IsValid)
@@ -49,6 +54,9 @@ public class SavingsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType<SavingVm>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateSaving([FromBody] AddOrEditSavingDto payload, int id)
     {
         if (!ModelState.IsValid)
@@ -68,6 +76,8 @@ public class SavingsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteSaving(int id)
     {
         try
