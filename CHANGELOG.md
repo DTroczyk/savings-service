@@ -16,3 +16,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show API version on Swagger.
 - Set status of goal - Active, Unactive, Archive.
 - Filter Savings by description, userId, goalId, date.
+- User GET endpoint.

@@ -40,6 +40,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IGoalsService, GoalsService>();
 builder.Services.AddScoped<ISavingsService, SavingsService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

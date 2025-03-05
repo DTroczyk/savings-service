@@ -13,6 +13,8 @@
                 .ForMember(dest => dest.GoalName, opt => opt.MapFrom(src => src.Goal.Name));
 
             CreateMap<Goal, GoalVm>();
+
+            CreateMap<ApplicationUser, UserVm>();
         }
     }
 }
